@@ -1,0 +1,10 @@
+if [ "$interface" = wlan0 ]; then
+  case "$reason" in
+    PREINIT) (sleep 3; openrc wifi > /dev/null 2>&1) & ;;
+    DEPARTED) (sleep 3; openrc default > /dev/null 2>&1) & ;;
+  esac
+fi
+
+if $if_up; then
+  (sleep 3; chronyc online > /dev/null 2>&1) &
+fi
