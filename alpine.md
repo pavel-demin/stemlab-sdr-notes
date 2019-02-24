@@ -29,9 +29,9 @@ The wired interface is by default configured to request an IP address via DHCP. 
 
 The configuration of the IP addresses is in [/etc/dhcpcd.conf](https://github.com/pavel-demin/stemlab-sdr-notes/blob/master/alpine/etc/dhcpcd.conf). More information about [/etc/dhcpcd.conf](https://github.com/pavel-demin/stemlab-sdr-notes/blob/master/alpine/etc/dhcpcd.conf) can be found at [this link](https://www.mankier.com/5/dhcpcd.conf).
 
-From systems with enabled DNS Service Discovery (DNS-SD), STEMlab SDR can be accessed as `rp-f0xxxx.local`, where `f0xxxx` are the last 6 characters from the MAC address written on the Ethernet connector.
+From systems with enabled DNS Service Discovery (DNS-SD), STEMlab SDR can be accessed as `sdr-f0xxxx.local`, where `f0xxxx` are the last 6 characters from the MAC address written on the Ethernet connector.
 
-In the local networks with enabled local DNS, STEMlab SDR can also be accessed as `rp-f0xxxx`.
+In the local networks with enabled local DNS, STEMlab SDR can also be accessed as `sdr-f0xxxx`.
 
 Useful commands
 -----
