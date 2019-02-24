@@ -9,9 +9,9 @@ Interesting links
 
 Some interesting links on network analyzers:
 
- - [VNA Operating Guide](http://www.wetterlin.org/sam/SA/Operation/VNA_Guide.pdf)
+ - [VNA Operating Guide](https://www.dropbox.com/sh/a1yecde4hs91ji0/AAB3chlcIiZuFTcRUPlXxhgBa/vna/VNA_Guide.pdf?dl=1)
 
- - [Three-Bead-Balun Reflection Bridge](http://www.wetterlin.org/sam/Reflection/3BeadBalunBridge.pdf)
+ - [Three-Bead-Balun Reflection Bridge](https://www.dropbox.com/sh/a1yecde4hs91ji0/AACnUxdMzktjgPIJ6kHvcMVDa/vna/3BeadBalunBridge.pdf?dl=1)
 
  - [Ham VNA](http://dxatlas.com/HamVNA)
 
