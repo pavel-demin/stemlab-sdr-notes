@@ -47,11 +47,11 @@ Creating virtual machine with Debian 8.11 (amd64)
 
   - Set "Adapter Type" to "Paravirtualized Network (virtio-net)" for both "Adapter 1" and "Adapter 2"
 
-  - Select "System" and select only "CD/DVD" in the "Boot Order" list
+  - Select "System" and select only "Optical" in the "Boot Order" list
 
   - Select "Storage" and select "Empty" below the "IDE Controller"
 
-  - Click the small CD/DVD icon next to the "CD/DVD Drive" drop-down list and select the location of the `mini.iso` image
+  - Click the small CD/DVD icon next to the "Optical Drive" drop-down list and select the location of the `mini.iso` image
 
   - Click "OK"
 
