@@ -1,0 +1,11 @@
+# Site settings
+title: STEMlab SDR Notes
+description: Notes on STEMlab 122.88-16 SDR
+baseurl: /stemlab-sdr-notes
+url: http://pavel-demin.github.io
+
+release-image: https://github.com/pavel-demin/stemlab-sdr-notes/releases/download/20190224/stemlab-sdr-alpine-3.9-armv7-20190224.zip
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
