@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
   time_t t;
   struct tm *gmt;
   volatile void *cfg, *sts;
-  volatile uint64_t *fifo[8];
+  volatile uint64_t *fifo[16];
   volatile uint8_t *rst, *sel;
   volatile uint16_t *cntr;
   int32_t type = 2;
@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
   char zeros[15] = "000000_0000.c2";
   double dialfreq;
   double corr;
-  double freq[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-  int chan[8] = {1, 1, 1, 1, 1, 1, 1, 1};
+  double freq[16] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+  int chan[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
   uint8_t value = 0;
 
   if(argc != 2)
@@ -67,9 +67,9 @@ int main(int argc, char *argv[])
 
   length = config_setting_length(setting);
 
-  if(length > 8)
+  if(length > 16)
   {
-    fprintf(stderr, "More than 8 bands in configuration file.\n");
+    fprintf(stderr, "More than 16 bands in configuration file.\n");
     return EXIT_FAILURE;
   }
 
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
   sts = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40000000);
   cfg = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40001000);
 
-  for(i = 0; i < 8; ++i)
+  for(i = 0; i < 16; ++i)
   {
     fifo[i] = mmap(NULL, 8*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40002000 + i * 0x1000);
     *(uint32_t *)(cfg + 8 + i * 4) = (uint32_t)floor((1.0 + 1.0e-6 * corr) * freq[i] / 122.88 * (1<<30) + 0.5);
@@ -136,8 +136,8 @@ int main(int argc, char *argv[])
   *rst &= ~1;
 
   offset = 0;
-  buffer = malloc(45000 * 8 * 8);
-  memset(buffer, 0, 45000 * 8 * 8);
+  buffer = malloc(45000 * 8 * 16);
+  memset(buffer, 0, 45000 * 8 * 16);
 
   while(offset < 42000)
   {
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
 
     for(i = 0; i < 250; ++i)
     {
-      for(j = 0; j < 8; ++j)
+      for(j = 0; j < 16; ++j)
       {
         buffer[j * 45000 + offset + i] = *fifo[j];
       }
