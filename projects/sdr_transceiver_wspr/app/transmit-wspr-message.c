@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
   }
 
   cfg = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40001000);
-  fifo = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x4000A000);
+  fifo = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40012000);
 
   coef[0] = ((uint16_t *)(cfg + 40));
   coef[1] = ((uint16_t *)(cfg + 42));
