@@ -9,7 +9,7 @@ Short description
 
 This project implements a standalone multiband FT8 transceiver with all the FT8 signal processing done by STEMlab SDR in the following way:
 
- - simultaneously record FT8 signals from eight bands
+ - simultaneously record FT8 signals from sixteen bands
  - use FPGA for all the conversions needed to produce .c2 files (complex 32-bit floating-point data at 4000 samples per second)
  - use on-board CPU to process the .c2 files with the [FT8 decoder](https://github.com/pavel-demin/ft8d)
 
@@ -18,7 +18,7 @@ With this configuration, it is enough to connect STEMlab SDR to an antenna and t
 Hardware
 -----
 
-The FPGA configuration consists of eight identical digital down-converters (DDC). Their structure is shown on the following diagram:
+The FPGA configuration consists of sixteen identical digital down-converters (DDC). Their structure is shown on the following diagram:
 
 ![FT8 receiver]({{ "/img/sdr-receiver-ft8.png" | prepend: site.baseurl }})
 
@@ -29,7 +29,7 @@ The [projects/sdr_transceiver_ft8](https://github.com/pavel-demin/stemlab-sdr-no
 Software
 -----
 
-The [write-c2-files.c](https://github.com/pavel-demin/stemlab-sdr-notes/tree/master/projects/sdr_transceiver_ft8/app/write-c2-files.c) program accumulates 236000 samples at 4000 samples per second for each of the eight bands and saves the samples to eight .c2 files.
+The [write-c2-files.c](https://github.com/pavel-demin/stemlab-sdr-notes/tree/master/projects/sdr_transceiver_ft8/app/write-c2-files.c) program accumulates 236000 samples at 4000 samples per second for each of the sixteen bands and saves the samples to sixteen .c2 files.
 
 The recorded .c2 files are processed with the [FT8 decoder](https://github.com/pavel-demin/ft8d).
 
