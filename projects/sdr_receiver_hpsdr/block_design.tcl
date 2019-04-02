@@ -50,7 +50,7 @@ cell pavel-demin:user:axis_stemlab_sdr_adc adc_0 {
 
 # Create axi_cfg_register
 cell pavel-demin:user:axi_cfg_register cfg_0 {
-  CFG_DATA_WIDTH 320
+  CFG_DATA_WIDTH 640
   AXI_ADDR_WIDTH 32
   AXI_DATA_WIDTH 32
 }
@@ -59,14 +59,14 @@ cell pavel-demin:user:axi_cfg_register cfg_0 {
 
 # Create port_slicer
 cell pavel-demin:user:port_slicer rst_slice_0 {
-  DIN_WIDTH 320 DIN_FROM 7 DIN_TO 0
+  DIN_WIDTH 640 DIN_FROM 7 DIN_TO 0
 } {
   din cfg_0/cfg_data
 }
 
 # Create port_slicer
 cell pavel-demin:user:port_slicer cfg_slice_0 {
-  DIN_WIDTH 320 DIN_FROM 319 DIN_TO 32
+  DIN_WIDTH 640 DIN_FROM 319 DIN_TO 32
 } {
   din cfg_0/cfg_data
 }
@@ -94,6 +94,45 @@ module rx_0 {
   slice_17/din cfg_slice_0/dout
 }
 
+# RX 1
+
+# Create port_slicer
+cell pavel-demin:user:port_slicer rst_slice_1 {
+  DIN_WIDTH 640 DIN_FROM 327 DIN_TO 320
+} {
+  din cfg_0/cfg_data
+}
+
+# Create port_slicer
+cell pavel-demin:user:port_slicer cfg_slice_1 {
+  DIN_WIDTH 640 DIN_FROM 639 DIN_TO 352
+} {
+  din cfg_0/cfg_data
+}
+
+module rx_1 {
+  source projects/sdr_receiver_hpsdr/rx.tcl
+} {
+  slice_0/din rst_slice_1/dout
+  slice_1/din cfg_slice_1/dout
+  slice_2/din cfg_slice_1/dout
+  slice_3/din cfg_slice_1/dout
+  slice_4/din cfg_slice_1/dout
+  slice_5/din cfg_slice_1/dout
+  slice_6/din cfg_slice_1/dout
+  slice_7/din cfg_slice_1/dout
+  slice_8/din cfg_slice_1/dout
+  slice_9/din cfg_slice_1/dout
+  slice_10/din cfg_slice_1/dout
+  slice_11/din cfg_slice_1/dout
+  slice_12/din cfg_slice_1/dout
+  slice_13/din cfg_slice_1/dout
+  slice_14/din cfg_slice_1/dout
+  slice_15/din cfg_slice_1/dout
+  slice_16/din cfg_slice_1/dout
+  slice_17/din cfg_slice_1/dout
+}
+
 # STS
 
 # Create dna_reader
@@ -104,7 +143,7 @@ cell pavel-demin:user:dna_reader dna_0 {} {
 
 # Create xlconcat
 cell xilinx.com:ip:xlconcat concat_0 {
-  NUM_PORTS 10
+  NUM_PORTS 18
   IN0_WIDTH 32
   IN1_WIDTH 64
   IN2_WIDTH 16
@@ -115,6 +154,14 @@ cell xilinx.com:ip:xlconcat concat_0 {
   IN7_WIDTH 16
   IN8_WIDTH 16
   IN9_WIDTH 16
+  IN10_WIDTH 16
+  IN11_WIDTH 16
+  IN12_WIDTH 16
+  IN13_WIDTH 16
+  IN14_WIDTH 16
+  IN15_WIDTH 16
+  IN16_WIDTH 16
+  IN17_WIDTH 16
 } {
   In0 const_0/dout
   In1 dna_0/dna_data
@@ -126,11 +173,19 @@ cell xilinx.com:ip:xlconcat concat_0 {
   In7 rx_0/fifo_generator_5/rd_data_count
   In8 rx_0/fifo_generator_6/rd_data_count
   In9 rx_0/fifo_generator_7/rd_data_count
+  In10 rx_1/fifo_generator_0/rd_data_count
+  In11 rx_1/fifo_generator_1/rd_data_count
+  In12 rx_1/fifo_generator_2/rd_data_count
+  In13 rx_1/fifo_generator_3/rd_data_count
+  In14 rx_1/fifo_generator_4/rd_data_count
+  In15 rx_1/fifo_generator_5/rd_data_count
+  In16 rx_1/fifo_generator_6/rd_data_count
+  In17 rx_1/fifo_generator_7/rd_data_count
 }
 
 # Create axi_sts_register
 cell pavel-demin:user:axi_sts_register sts_0 {
-  STS_DATA_WIDTH 224
+  STS_DATA_WIDTH 352
   AXI_ADDR_WIDTH 32
   AXI_DATA_WIDTH 32
 } {
@@ -165,5 +220,14 @@ for {set i 0} {$i <= 7} {incr i} {
 
   set_property RANGE 8K [get_bd_addr_segs ps_0/Data/SEG_reader_${i}_reg0]
   set_property OFFSET 0x4001[format %X [expr 2 * $i]]000 [get_bd_addr_segs ps_0/Data/SEG_reader_${i}_reg0]
+
+  # Create all required interconnections
+  apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {
+    Master /ps_0/M_AXI_GP0
+    Clk Auto
+  } [get_bd_intf_pins rx_1/reader_$i/S_AXI]
+
+  set_property RANGE 8K [get_bd_addr_segs ps_0/Data/SEG_reader_${i}_reg01]
+  set_property OFFSET 0x4002[format %X [expr 2 * $i]]000 [get_bd_addr_segs ps_0/Data/SEG_reader_${i}_reg01]
 
 }

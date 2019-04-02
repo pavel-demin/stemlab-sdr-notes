@@ -8,7 +8,7 @@ N <- 6                         # Number of stages
 Fo <- 0.238                    # Pass band edge
 
 # fir2 parameters
-k <- kaiserord(c(Fo, Fo+0.008), c(1, 0), 1/(2^18), 1)
+k <- kaiserord(c(Fo, Fo+0.008), c(1, 0), 1/(2^16), 1)
 L <- k$n                       # Filter order
 Beta <- k$beta                 # Kaiser window parameter
 
