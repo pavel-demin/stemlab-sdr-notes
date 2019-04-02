@@ -52,16 +52,16 @@ int main(int argc, char *argv[])
   uint8_t chan = 0;
   long number;
 
-  for(i = 10; i > 1; --i)
+  for(i = 0; i < 8; ++i)
   {
     errno = 0;
-    number = (argc == 11) ? strtol(argv[i], &end, 10) : -1;
-    if(errno != 0 || end == argv[i] || number < 1 || number > 2)
+    number = (argc == 10) ? strtol(argv[i + 2], &end, 10) : -1;
+    if(errno != 0 || end == argv[i + 2] || number < 1 || number > 2)
     {
-      printf("Usage: sdr-receiver-hpsdr interface 1|2 1|2 1|2 1|2 1|2 1|2 1|2 1|2 1|2\n");
+      printf("Usage: sdr-receiver-hpsdr interface 1|2 1|2 1|2 1|2 1|2 1|2 1|2 1|2\n");
       return EXIT_FAILURE;
     }
-    if(i > 2) chan |= (number - 1) << (i - 3);
+    chan |= (number - 1) << i;
   }
 
   if((fd = open("/dev/mem", O_RDWR)) < 0)
@@ -73,30 +73,29 @@ int main(int argc, char *argv[])
   sts = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40000000);
   cfg = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40001000);
 
-  switch(number)
+  if(strcmp(argv[1], "eth0") == 0)
   {
-    case 1:
-      for(i = 0; i < 8; ++i)
-      {
-        rx_data[i] = mmap(NULL, 2*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40010000 + i * 0x2000);
-        rx_freq[i] = ((uint32_t *)(cfg + 8 + i * 4));
-        rx_cntr[i] = ((uint16_t *)(sts + 12 + i * 2));
-      }
-      rx_rst = ((uint8_t *)(cfg + 0));
-      rx_rate = ((uint16_t *)(cfg + 4));
-      rx_sel = ((uint8_t *)(cfg + 6));
-      break;
-    case 2:
-      for(i = 0; i < 8; ++i)
-      {
-        rx_data[i] = mmap(NULL, 2*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40020000 + i * 0x2000);
-        rx_freq[i] = ((uint32_t *)(cfg + 48 + i * 4));
-        rx_cntr[i] = ((uint16_t *)(sts + 28 + i * 2));
-      }
-      rx_rst = ((uint8_t *)(cfg + 40));
-      rx_rate = ((uint16_t *)(cfg + 44));
-      rx_sel = ((uint8_t *)(cfg + 46));
-      break;
+    for(i = 0; i < 8; ++i)
+    {
+      rx_data[i] = mmap(NULL, 2*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40010000 + i * 0x2000);
+      rx_freq[i] = ((uint32_t *)(cfg + 8 + i * 4));
+      rx_cntr[i] = ((uint16_t *)(sts + 12 + i * 2));
+    }
+    rx_rst = ((uint8_t *)(cfg + 0));
+    rx_rate = ((uint16_t *)(cfg + 4));
+    rx_sel = ((uint8_t *)(cfg + 6));
+  }
+  else
+  {
+    for(i = 0; i < 8; ++i)
+    {
+      rx_data[i] = mmap(NULL, 2*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40020000 + i * 0x2000);
+      rx_freq[i] = ((uint32_t *)(cfg + 48 + i * 4));
+      rx_cntr[i] = ((uint16_t *)(sts + 28 + i * 2));
+    }
+    rx_rst = ((uint8_t *)(cfg + 40));
+    rx_rate = ((uint16_t *)(cfg + 44));
+    rx_sel = ((uint8_t *)(cfg + 46));
   }
 
   /* set default rx phase increment */
@@ -116,7 +115,7 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
-  strncpy(hwaddr.ifr_name, argv[1], IFNAMSIZ);
+  strncpy(hwaddr.ifr_name, argv[1], IFNAMSIZ - 1);
   ioctl(sock_ep2, SIOCGIFHWADDR, &hwaddr);
   for(i = 0; i < 6; ++i) reply[i + 3] = hwaddr.ifr_addr.sa_data[i];
 
