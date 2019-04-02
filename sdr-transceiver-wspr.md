@@ -21,7 +21,7 @@ Short description
 
 This project implements a standalone multiband WSPR transceiver with all the WSPR signal processing done by STEMlab SDR in the following way:
 
- - simultaneously record WPSR signals from eight bands
+ - simultaneously record WPSR signals from sixteen bands
  - use FPGA for all the conversions needed to produce .c2 files (complex 32-bit floating-point data at 375 samples per second)
  - use on-board CPU to process the .c2 files with the [WSPR decoder](https://sourceforge.net/p/wsjt/wsjt/HEAD/tree/branches/wsjtx/lib/wsprd/)
  - upload decoded data to [wsprnet.org](http://wsprnet.org)
@@ -33,7 +33,7 @@ The transmitter part is disabled by default and should be enabled manually.
 Hardware
 -----
 
-The FPGA configuration consists of eight identical digital down-converters (DDC). Their structure is shown on the following diagram:
+The FPGA configuration consists of sixteen identical digital down-converters (DDC). Their structure is shown on the following diagram:
 
 ![WSPR receiver]({{ "/img/sdr-receiver-wspr.png" | prepend: site.baseurl }})
 
@@ -44,7 +44,7 @@ The [projects/sdr_transceiver_wspr](https://github.com/pavel-demin/stemlab-sdr-n
 Software
 -----
 
-The [write-c2-files.c](https://github.com/pavel-demin/stemlab-sdr-notes/tree/master/projects/sdr_transceiver_wspr/app/write-c2-files.c) program accumulates 42000 samples at 375 samples per second for each of the eight bands and saves the samples to eight .c2 files.
+The [write-c2-files.c](https://github.com/pavel-demin/stemlab-sdr-notes/tree/master/projects/sdr_transceiver_wspr/app/write-c2-files.c) program accumulates 42000 samples at 375 samples per second for each of the sixteen bands and saves the samples to sixteen .c2 files.
 
 The recorded .c2 files are processed with the [WSPR decoder](https://sourceforge.net/p/wsjt/wsjt/HEAD/tree/branches/wsjtx/lib/wsprd/).
 
