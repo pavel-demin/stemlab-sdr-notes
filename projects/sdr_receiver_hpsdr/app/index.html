@@ -35,8 +35,11 @@
 <ul>
 <li>Install <a href="http://dxatlas.com/skimserver" target="_blank">CW Skimmer Server</a>.</li>
 <li>Copy <a href="https://github.com/k3it/HermesIntf/releases" target="_blank">HermesIntf.dll</a> to the CW Skimmer Server program directory (C:\Program Files (x86)\Afreet\SkimSrv).</li>
+<li>In the <code class="highlighter-rouge">SkimSrv</code> directory, rename <code class="highlighter-rouge">HermesIntf.dll</code> to <code class="highlighter-rouge">HermestIntf_XXXX.dll</code> where <code class="highlighter-rouge">XXXX</code> are the last four digits of the MAC address of the STEMlab SDR.</li>
+<li>Make a copy of the <code class="highlighter-rouge">SkimSrv</code> directory and rename the copy to <code class="highlighter-rouge">SkimSrv2</code>.</li>
+<li>In the <code class="highlighter-rouge">SkimSrv2</code> directory, rename <code class="highlighter-rouge">SkimSrv.exe</code> to <code class="highlighter-rouge">SkimSrv2.exe</code> and rename <code class="highlighter-rouge">HermestIntf_XXXX.dll</code> to <code class="highlighter-rouge">HermestIntf_FFXX.dll</code>.</li>
 <li>Install <a href="http://www.reversebeacon.net/pages/Aggregator+34" target="_blank">Reverse Beacon Network Aggregator</a>.</li>
-<li>Start CW Skimmer Server, configure frequencies and your call sign.</li>
+<li>Start <code class="highlighter-rouge">SkimSrv.exe</code> and <code class="highlighter-rouge">SkimSrv2.exe</code>, configure frequencies and your call sign.</li>
 <li>Start Reverse Beacon Network Aggregator.</li>
 </ul>
 </div>
