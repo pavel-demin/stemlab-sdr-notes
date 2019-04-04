@@ -324,7 +324,7 @@ cell xilinx.com:ip:xbip_dsp48_macro mult_1 {
   OUTPUT_PROPERTIES User_Defined
   A_WIDTH 24
   B_WIDTH 16
-  P_WIDTH 16
+  P_WIDTH 17
 } {
   A mult_0/m_axis_dout_tdata
   B slice_3/dout
