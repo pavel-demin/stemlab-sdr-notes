@@ -39,8 +39,8 @@ set_property PACKAGE_PIN R19 [get_ports {adc_dat_b_i[6]}]
 set_property PACKAGE_PIN T20 [get_ports {adc_dat_b_i[7]}]
 set_property PACKAGE_PIN T19 [get_ports {adc_dat_b_i[8]}]
 set_property PACKAGE_PIN U20 [get_ports {adc_dat_b_i[9]}]
-set_property PACKAGE_PIN V20 [get_ports {adc_dat_b_i[10]}
-set_property PACKAGE_PIN W20 [get_ports {adc_dat_b_i[11]}
+set_property PACKAGE_PIN V20 [get_ports {adc_dat_b_i[10]}]
+set_property PACKAGE_PIN W20 [get_ports {adc_dat_b_i[11]}]
 set_property PACKAGE_PIN W19 [get_ports {adc_dat_b_i[12]}]
 set_property PACKAGE_PIN Y19 [get_ports {adc_dat_b_i[13]}]
 set_property PACKAGE_PIN W18 [get_ports {adc_dat_b_i[14]}]
