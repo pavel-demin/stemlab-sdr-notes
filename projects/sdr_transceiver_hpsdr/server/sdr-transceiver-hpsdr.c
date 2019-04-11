@@ -563,7 +563,7 @@ int main(int argc, char *argv[])
   *tx_size = size;
 
   /* set default tx level */
-  *tx_level = 21800;
+  *tx_level = 21910;
 
   /* set ps level */
   *ps_level = 18716;
@@ -1029,7 +1029,7 @@ void process_ep2(uint8_t *frame)
       }
       else
       {
-        *tx_level = (int16_t)floor(data * 85.490 + 0.5);
+        *tx_level = (int16_t)floor(data * 85.920 + 0.5);
       }
       /* configure microphone boost */
       if(i2c_codec)
