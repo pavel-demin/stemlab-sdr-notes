@@ -555,7 +555,7 @@ int main(int argc, char *argv[])
   {
     ramp[i] = ramp[i - 1] + a[0] - a[1] * cos(2.0 * M_PI * i / size) + a[2] * cos(4.0 * M_PI * i / size) - a[3] * cos(6.0 * M_PI * i / size);
   }
-  scale = 6.1e6 / ramp[size];
+  scale = 4.1e6 / ramp[size];
   for(i = 0; i <= size; ++i)
   {
     tx_ramp[i] = (int32_t)floor(ramp[i] * scale + 0.5);
