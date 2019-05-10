@@ -4,14 +4,14 @@ title: Development machine
 permalink: /development-machine/
 ---
 
-The following are the instructions for installing a virtual machine with [Debian](https://www.debian.org/releases/jessie) 8.11 (amd64) and [Vivado Design Suite](https://www.xilinx.com/products/design-tools/vivado) 2018.3 with full SDK.
+The following are the instructions for installing a virtual machine with [Debian](https://www.debian.org/releases/stretch) 9.9 (amd64) and [Vivado Design Suite](https://www.xilinx.com/products/design-tools/vivado) 2018.3 with full SDK.
 
-Creating virtual machine with Debian 8.11 (amd64)
+Creating virtual machine with Debian 9.9 (amd64)
 -----
 
 - Download and install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 
-- Download [mini.iso](http://deb.debian.org/debian/dists/jessie/main/installer-amd64/current/images/netboot/mini.iso) for Debian 8.11
+- Download [mini.iso](http://deb.debian.org/debian/dists/stretch/main/installer-amd64/current/images/netboot/mini.iso) for Debian 9.9
 
 - Start VirtualBox
 
@@ -33,7 +33,7 @@ Creating virtual machine with Debian 8.11 (amd64)
 
   - Set the memory size to at least 2048 MB
 
-  - Select "Create a virtual hard drive now"
+  - Select "Create a virtual hard disk now"
 
   - Select "VDI (VirtualBox Disk Image)"
 
@@ -61,13 +61,10 @@ Creating virtual machine with Debian 8.11 (amd64)
 
 - Edit the boot parameters at the bottom of the boot screen to make them look like the following:
 
-  (the content of the `bit.ly/2GH2YHy` installation script can be seen at [this
-link](https://github.com/pavel-demin/red-pitaya-notes/blob/gh-pages/etc/debian.s
-eed))
+  (the content of the `bit.ly/2GH2YHy` installation script can be seen at [this link](https://github.com/pavel-demin/red-pitaya-notes/blob/gh-pages/etc/debian.seed))
 
 {% highlight bash %}
-linux initrd=initrd.gz url=bit.ly/2GH2YHy auto=true priority=critical interface=
-auto
+linux initrd=initrd.gz url=bit.ly/2GH2YHy auto=true priority=critical interface=auto
 {% endhighlight %}
 
 - Press ENTER to start the automatic installation
@@ -80,7 +77,7 @@ auto
 
 - Click "OK"
 
-- The virtual machine is ready to use (the default password for the `root` and `stemlab-sdr` accounts is `changeme`)
+- The virtual machine is ready to use (the default password for the `root` and `red-pitaya` accounts is `changeme`)
 
 Accessing the virtual machine
 -----

@@ -9,7 +9,7 @@ d-i netcfg/get_domain string unassigned-domain
 
 d-i netcfg/wireless_wep string
 
-d-i mirror/suite string jessie
+d-i mirror/suite string stretch
 d-i mirror/country string manual
 d-i mirror/http/hostname string deb.debian.org
 d-i mirror/http/directory string /debian
@@ -70,12 +70,15 @@ d-i grub-installer/bootdev string default
 d-i grub-installer/only_debian boolean true
 d-i grub-installer/with_other_os boolean true
 
+d-i debian-installer/add-kernel-opts string net.ifnames=0 biosdevname=0
+
 d-i finish-install/reboot_in_progress note
 
 d-i preseed/late_command string \
+  printf "\nallow-hotplug eth0\niface eth0 inet dhcp\n" >> /target/etc/network/interfaces; \
   printf "\nallow-hotplug eth1\niface eth1 inet dhcp\n" >> /target/etc/network/interfaces; \
   in-target apt-get --yes --no-install-recommends install \
-  openssh-server virtualbox-guest-dkms module-assistant linux-headers-amd64 \
+  openssh-server module-assistant linux-headers-amd64 \
   autofs samba git curl ca-certificates xauth \
   build-essential less vim screen sudo psmisc \
   libxrender1 libxtst6 libxi6 lib32ncurses5 \

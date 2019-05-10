@@ -11,7 +11,7 @@ For my experiments with the STEMlab SDR, I'd like to have the following developm
 
  - recent version of the [Vivado Design Suite](https://www.xilinx.com/products/design-tools/vivado)
  - recent version of the [Linux kernel](https://www.kernel.org)
- - recent version of the [Debian distribution](https://www.debian.org/releases/jessie) on the development machine
+ - recent version of the [Debian distribution](https://www.debian.org/releases/stretch) on the development machine
  - recent version of the [Alpine distribution](https://alpinelinux.org) on the STEMlab SDR
  - basic project with all the STEMlab SDR peripherals connected
  - mostly command-line tools
@@ -24,7 +24,7 @@ Pre-requirements
 
 My development machine has the following installed:
 
- - [Debian](https://www.debian.org/releases/jessie) 8.11 (amd64)
+ - [Debian](https://www.debian.org/releases/stretch) 9.9 (amd64)
 
  - [Vivado Design Suite](https://www.xilinx.com/products/design-tools/vivado) 2018.3 with full SDK
 
