@@ -115,6 +115,7 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
+  memset(&hwaddr, 0, sizeof(hwaddr));
   strncpy(hwaddr.ifr_name, argv[1], IFNAMSIZ - 1);
   ioctl(sock_ep2, SIOCGIFHWADDR, &hwaddr);
   for(i = 0; i < 6; ++i) reply[i + 3] = hwaddr.ifr_addr.sa_data[i];
