@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
   struct tm *gmt;
   volatile void *cfg, *sts;
   volatile uint64_t *fifo[16];
-  volatile uint8_t *rst, *sel;
-  volatile uint16_t *cntr;
+  volatile uint8_t *rst;
+  volatile uint16_t *sel, *cntr;
   uint64_t *buffer;
   config_t config;
   config_setting_t *setting, *element;
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
   double corr;
   double freq[16] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
   int chan[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-  uint8_t value = 0;
+  uint16_t value = 0;
 
   if(argc != 2)
   {
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
   }
 
   rst = (uint8_t *)(cfg + 0);
-  sel = (uint8_t *)(cfg + 4);
+  sel = (uint16_t *)(cfg + 4);
   cntr = (uint16_t *)(sts + 12);
 
   *sel = value;
