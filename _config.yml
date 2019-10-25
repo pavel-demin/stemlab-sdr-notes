@@ -4,7 +4,7 @@ description: Notes on STEMlab 122.88-16 SDR
 baseurl: /stemlab-sdr-notes
 url: http://pavel-demin.github.io
 
-release-image: https://github.com/pavel-demin/stemlab-sdr-notes/releases/download/20190411/stemlab-sdr-alpine-3.9-armv7-20190411.zip
+release-image: https://github.com/pavel-demin/stemlab-sdr-notes/releases/download/20191025/stemlab-sdr-alpine-3.9-armv7-20191025.zip
 
 # Build settings
 markdown: kramdown
