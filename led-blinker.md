@@ -145,7 +145,7 @@ sudo sh scripts/alpine.sh
 
 A pre-built SD card image can be downloaded from [this link]({{ site.release-image }}).
 
-To write the image to a SD card, copy the content of the SD card image zip file to an SD card.
+To write the image to a SD card, copy the contents of the SD card image zip file to an SD card.
 
 More details about the SD card image can be found at [this link]({{ "/alpine/" | prepend: site.baseurl }}).
 
