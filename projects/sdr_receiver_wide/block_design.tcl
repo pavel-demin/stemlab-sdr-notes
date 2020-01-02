@@ -6,6 +6,12 @@ cell xilinx.com:ip:clk_wiz pll_0 {
   PRIM_SOURCE Differential_clock_capable_pin
   CLKOUT1_USED true
   CLKOUT1_REQUESTED_OUT_FREQ 122.88
+  CLKOUT2_USED true
+  CLKOUT2_REQUESTED_OUT_FREQ 245.76
+  CLKOUT2_REQUESTED_PHASE -112.5
+  CLKOUT3_USED true
+  CLKOUT3_REQUESTED_OUT_FREQ 245.76
+  CLKOUT3_REQUESTED_PHASE -67.5
   USE_RESET false
 } {
   clk_in1_p adc_clk_p_i
@@ -48,52 +54,57 @@ cell pavel-demin:user:axis_stemlab_sdr_adc adc_0 {
   adc_csn adc_csn_o
 }
 
+# DAC
+
+# Create axis_stemlab_sdr_dac
+cell pavel-demin:user:axis_stemlab_sdr_dac dac_0 {
+  DAC_DATA_WIDTH 14
+} {
+  aclk pll_0/clk_out1
+  ddr_clk pll_0/clk_out2
+  wrt_clk pll_0/clk_out3
+  locked pll_0/locked
+  dac_clk dac_clk_o
+  dac_rst dac_rst_o
+  dac_sel dac_sel_o
+  dac_wrt dac_wrt_o
+  dac_dat dac_dat_o
+  s_axis_tvalid const_0/dout
+}
+
 # CFG
 
 # Create axi_cfg_register
 cell pavel-demin:user:axi_cfg_register cfg_0 {
-  CFG_DATA_WIDTH 96
+  CFG_DATA_WIDTH 192
   AXI_ADDR_WIDTH 32
   AXI_DATA_WIDTH 32
 }
 
 # Create port_slicer
 cell pavel-demin:user:port_slicer slice_0 {
-  DIN_WIDTH 96 DIN_FROM 0 DIN_TO 0
+  DIN_WIDTH 192 DIN_FROM 0 DIN_TO 0
 } {
   din cfg_0/cfg_data
 }
 
 # Create port_slicer
 cell pavel-demin:user:port_slicer slice_1 {
-  DIN_WIDTH 96 DIN_FROM 1 DIN_TO 1
+  DIN_WIDTH 192 DIN_FROM 1 DIN_TO 1
 } {
   din cfg_0/cfg_data
 }
 
-# Create port_slicer
-cell pavel-demin:user:port_slicer slice_2 {
-  DIN_WIDTH 96 DIN_FROM 63 DIN_TO 32
-} {
-  din cfg_0/cfg_data
-}
+# DDS
 
-# Create port_slicer
-cell pavel-demin:user:port_slicer slice_3 {
-  DIN_WIDTH 96 DIN_FROM 95 DIN_TO 64
-} {
-  din cfg_0/cfg_data
-}
+for {set i 0} {$i <= 3} {incr i} {
 
-# RX
-
-# Create axis_lfsr
-cell pavel-demin:user:axis_lfsr lfsr_0 {} {
-  aclk pll_0/clk_out1
-  aresetn slice_0/dout
-}
-
-for {set i 0} {$i <= 1} {incr i} {
+  # Create port_slicer
+  cell pavel-demin:user:port_slicer slice_[expr $i + 2] {
+    DIN_WIDTH 192 DIN_FROM [expr 32 * $i + 63] DIN_TO [expr 32 * $i + 32]
+  } {
+    din cfg_0/cfg_data
+  }
 
   # Create axis_constant
   cell pavel-demin:user:axis_constant phase_$i {
@@ -119,6 +130,14 @@ for {set i 0} {$i <= 1} {incr i} {
     aclk pll_0/clk_out1
   }
 
+}
+
+# RX
+
+# Create axis_lfsr
+cell pavel-demin:user:axis_lfsr lfsr_0 {} {
+  aclk pll_0/clk_out1
+  aresetn slice_0/dout
 }
 
 for {set i 0} {$i <= 3} {incr i} {
@@ -232,6 +251,46 @@ cell pavel-demin:user:axis_ram_writer writer_0 {
   aresetn slice_1/dout
 }
 
+# GEN
+
+for {set i 0} {$i <= 1} {incr i} {
+
+  # Create port_slicer
+  cell pavel-demin:user:port_slicer slice_[expr $i + 6] {
+    DIN_WIDTH 192 DIN_FROM [expr 16 * $i + 175] DIN_TO [expr 16 * $i + 160]
+  } {
+    din cfg_0/cfg_data
+  }
+
+  # Create xbip_dsp48_macro
+  cell xilinx.com:ip:xbip_dsp48_macro mult_[expr $i + 4] {
+    INSTRUCTION1 RNDSIMPLE(A*B+CARRYIN)
+    A_WIDTH.VALUE_SRC USER
+    B_WIDTH.VALUE_SRC USER
+    OUTPUT_PROPERTIES User_Defined
+    A_WIDTH 24
+    B_WIDTH 16
+    P_WIDTH 15
+  } {
+    A dds_[expr $i + 2]/m_axis_data_tdata
+    B slice_[expr $i + 6]/dout
+    CARRYIN lfsr_0/m_axis_tdata
+    CLK pll_0/clk_out1
+  }
+
+}
+
+# Create xlconcat
+cell xilinx.com:ip:xlconcat concat_0 {
+  NUM_PORTS 2
+  IN0_WIDTH 16
+  IN1_WIDTH 16
+} {
+  In0 mult_4/P
+  In1 mult_5/P
+  dout dac_0/s_axis_tdata
+}
+
 # STS
 
 # Create dna_reader
@@ -241,7 +300,7 @@ cell pavel-demin:user:dna_reader dna_0 {} {
 }
 
 # Create xlconcat
-cell xilinx.com:ip:xlconcat concat_0 {
+cell xilinx.com:ip:xlconcat concat_1 {
   NUM_PORTS 3
   IN0_WIDTH 32
   IN1_WIDTH 64
@@ -258,7 +317,7 @@ cell pavel-demin:user:axi_sts_register sts_0 {
   AXI_ADDR_WIDTH 32
   AXI_DATA_WIDTH 32
 } {
-  sts_data concat_0/dout
+  sts_data concat_1/dout
 }
 
 # Create all required interconnections

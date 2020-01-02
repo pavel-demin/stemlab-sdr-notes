@@ -112,10 +112,11 @@ int main ()
     while(!interrupted)
     {
       /* enter reset mode */
-      *(uint8_t *)(cfg + 0) &= ~3;
+      *(uint8_t *)(cfg + 0) &= ~1;
+      *(uint8_t *)(cfg + 0) &= ~2;
       /* set frequencies */
-      *(uint32_t *)(cfg + 4) = (uint32_t)floor(600000 / 122.88 * (1<<30) + 0.5);
-      *(uint32_t *)(cfg + 8) = (uint32_t)floor(600000 / 122.88 * (1<<30) + 0.5);
+      *(uint32_t *)(cfg + 4) = (uint32_t)floor(600000 / 122.88e6 * (1<<30) + 0.5);
+      *(uint32_t *)(cfg + 8) = (uint32_t)floor(600000 / 122.88e6 * (1<<30) + 0.5);
 
       if((sockClient = accept(sockServer, NULL, NULL)) < 0)
       {
@@ -124,8 +125,6 @@ int main ()
       }
 
       signal(SIGINT, signal_handler);
-
-      printf("new connection\n");
 
       /* enter normal operating mode */
       *(uint8_t *)(cfg + 0) |= 3;
@@ -144,7 +143,8 @@ int main ()
     }
 
     /* enter reset mode */
-    *(uint8_t *)(cfg + 0) &= ~3;
+    *(uint8_t *)(cfg + 0) &= ~1;
+    *(uint8_t *)(cfg + 0) &= ~2;
 
     close(sockServer);
 
