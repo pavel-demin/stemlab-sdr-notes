@@ -114,6 +114,8 @@ int main ()
       /* enter reset mode */
       *(uint8_t *)(cfg + 0) &= ~1;
       *(uint8_t *)(cfg + 0) &= ~2;
+      /* set CIC decimation rate */
+      *(uint16_t *)(cfg + 2) = 10;
       /* set frequencies */
       *(uint32_t *)(cfg + 4) = (uint32_t)floor(600000 / 122.88e6 * (1<<30) + 0.5);
       *(uint32_t *)(cfg + 8) = (uint32_t)floor(600000 / 122.88e6 * (1<<30) + 0.5);
