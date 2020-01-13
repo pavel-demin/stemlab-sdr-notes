@@ -21,15 +21,29 @@ void signal_handler(int sig)
   interrupted = 1;
 }
 
+void neoncopy(volatile void *dst, volatile void *src, int cnt)
+{
+  asm volatile
+  (
+    "loop_%=:\n"
+    "vldm %[src]!, {q0, q1, q2, q3}\n"
+    "vstm %[dst]!, {q0, q1, q2, q3}\n"
+    "subs %[cnt], %[cnt], #64\n"
+    "bgt loop_%="
+    : [dst] "+r" (dst), [src] "+r" (src), [cnt] "+r" (cnt)
+    :
+    : "q0", "q1", "q2", "q3", "cc", "memory"
+  );
+}
+
 int main ()
 {
   int mmapfd, sockServer, sockClient;
   int position, limit, offset;
   volatile uint32_t *slcr, *axi_hp0;
   volatile void *cfg, *sts, *ram, *buf;
-  volatile uint8_t *dst, *src;
   struct sockaddr_in addr;
-  uint32_t command, size, cnt;
+  uint32_t command, size;
   int32_t value;
   int yes = 1;
 
@@ -134,20 +148,7 @@ int main ()
       {
         offset = limit > 0 ? 0 : 4096*1024;
         limit = limit > 0 ? 0 : 512*1024;
-        dst = buf + offset;
-        src = ram + offset;
-        cnt = 4096*1024;
-        asm volatile
-        (
-          "loop:\n"
-          "vldm %[src]!, {q0, q1, q2, q3}\n"
-          "vstm %[dst]!, {q0, q1, q2, q3}\n"
-          "subs %[cnt], %[cnt], #64\n"
-          "bgt loop"
-          : [dst] "+r" (dst), [src] "+r" (src), [cnt] "+r" (cnt)
-          :
-          : "q0", "q1", "q2", "q3", "cc", "memory"
-        );
+        neoncopy(buf + offset, ram + offset, 4096*1024);
         if(send(sockClient, buf + offset, 4096*1024, MSG_NOSIGNAL) < 0) break;
       }
       else
