@@ -21,7 +21,7 @@ void signal_handler(int sig)
   interrupted = 1;
 }
 
-void neoncopy(volatile void *dst, volatile void *src, int cnt)
+void neoncopy(void *dst, volatile void *src, int cnt)
 {
   asm volatile
   (
@@ -41,7 +41,8 @@ int main ()
   int mmapfd, sockServer, sockClient;
   int position, limit, offset;
   volatile uint32_t *slcr, *axi_hp0;
-  volatile void *cfg, *sts, *ram, *buf;
+  volatile void *cfg, *sts, *ram;
+  void *buf;
   struct sockaddr_in addr;
   uint32_t command, size;
   int32_t value;
@@ -57,8 +58,8 @@ int main ()
   axi_hp0 = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, mmapfd, 0xF8008000);
   sts = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, mmapfd, 0x40000000);
   cfg = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, mmapfd, 0x40001000);
-  ram = mmap(NULL, 2048*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, mmapfd, 0x1E000000);
-  buf = mmap(NULL, 2048*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
+  ram = mmap(NULL, 128*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, mmapfd, 0x1E000000);
+  buf = mmap(NULL, 64*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
 
   /* set HP0 bus width to 64 bits */
   slcr[2] = 0xDF0D;
@@ -111,7 +112,7 @@ int main ()
     /* enter normal operating mode */
     *(uint8_t *)(cfg + 0) |= 3;
 
-    limit = 512*1024;
+    limit = 32*1024;
 
     while(!interrupted)
     {
@@ -143,17 +144,17 @@ int main ()
       /* read ram writer position */
       position = *(uint32_t *)(sts + 12);
 
-      /* send 4 MB if ready, otherwise sleep 1 ms */
-      if((limit > 0 && position > limit) || (limit == 0 && position < 512*1024))
+      /* send 256 kB if ready, otherwise sleep 0.1 ms */
+      if((limit > 0 && position > limit) || (limit == 0 && position < 32*1024))
       {
-        offset = limit > 0 ? 0 : 4096*1024;
-        limit = limit > 0 ? 0 : 512*1024;
-        neoncopy(buf + offset, ram + offset, 4096*1024);
-        if(send(sockClient, buf + offset, 4096*1024, MSG_NOSIGNAL) < 0) break;
+        offset = limit > 0 ? 0 : 256*1024;
+        limit = limit > 0 ? 0 : 32*1024;
+        neoncopy(buf, ram + offset, 256*1024);
+        if(send(sockClient, buf, 256*1024, MSG_NOSIGNAL) < 0) break;
       }
       else
       {
-        usleep(1000);
+        usleep(100);
       }
     }
 
