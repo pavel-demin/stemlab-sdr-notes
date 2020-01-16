@@ -107,7 +107,7 @@ int main ()
     usleep(100);
     *(uint8_t *)(cfg + 0) &= ~2;
     /* set default sample rate */
-    *(uint16_t *)(cfg + 2) = 10;
+    *(uint16_t *)(cfg + 2) = 8;
     /* set default phase increments */
     *(uint32_t *)(cfg + 4) = (uint32_t)floor(10000000 / 122.88e6 * (1<<30) + 0.5);
     *(uint32_t *)(cfg + 8) = (uint32_t)floor(10000000 / 122.88e6 * (1<<30) + 0.5);
