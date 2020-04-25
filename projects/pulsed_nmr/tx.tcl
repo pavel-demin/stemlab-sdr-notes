@@ -30,11 +30,11 @@ cell pavel-demin:user:axi_axis_writer writer_0 {
 cell xilinx.com:ip:fifo_generator fifo_generator_0 {
   PERFORMANCE_OPTIONS First_Word_Fall_Through
   INPUT_DATA_WIDTH 32
-  INPUT_DEPTH 2048
+  INPUT_DEPTH 4096
   OUTPUT_DATA_WIDTH 128
-  OUTPUT_DEPTH 512
+  OUTPUT_DEPTH 1024
   WRITE_DATA_COUNT true
-  WRITE_DATA_COUNT_WIDTH 12
+  WRITE_DATA_COUNT_WIDTH 13
 } {
   clk /pll_0/clk_out1
   srst slice_0/dout
@@ -60,37 +60,25 @@ cell pavel-demin:user:axis_gate_controller gate_0 {} {
 
 # Create xlconcat
 cell xilinx.com:ip:xlconcat concat_0 {
-  NUM_PORTS 3
+  NUM_PORTS 2
   IN0_WIDTH 32
   IN1_WIDTH 32
-  IN2_WIDTH 1
 } {
   In0 slice_2/dout
   In1 gate_0/poff
-  In2 gate_0/sync
 }
 
-cell xilinx.com:ip:c_shift_ram delay_0 {
-  WIDTH.VALUE_SRC USER
-  WIDTH 1
-  DEPTH 11
+# Create axis_constant
+cell pavel-demin:user:axis_constant phase_0 {
+  AXIS_TDATA_WIDTH 64
 } {
-  D gate_0/dout
-  CLK /pll_0/clk_out1
-}
-
-# Create util_vector_logic
-cell xilinx.com:ip:util_vector_logic or_0 {
-  C_SIZE 1
-  C_OPERATION or
-} {
-  Op1 gate_0/dout
-  Op2 delay_0/Q
+  cfg_data concat_0/dout
+  aclk /pll_0/clk_out1
 }
 
 # Create dds_compiler
 cell xilinx.com:ip:dds_compiler dds_0 {
-  DDS_CLOCK_RATE 122.88
+  DDS_CLOCK_RATE 125
   SPURIOUS_FREE_DYNAMIC_RANGE 138
   FREQUENCY_RESOLUTION 0.2
   PHASE_INCREMENT Streaming
@@ -101,12 +89,20 @@ cell xilinx.com:ip:dds_compiler dds_0 {
   OUTPUT_WIDTH 24
   DSP48_USE Minimal
   OUTPUT_SELECTION Sine
-  RESYNC true
 } {
-  s_axis_phase_tdata concat_0/dout
-  s_axis_phase_tvalid or_0/Res
+  S_AXIS_PHASE phase_0/M_AXIS
   aclk /pll_0/clk_out1
   aresetn slice_1/dout
+}
+
+# Create c_shift_ram
+cell xilinx.com:ip:c_shift_ram delay_0 {
+  WIDTH.VALUE_SRC USER
+  WIDTH 16
+  DEPTH 11
+} {
+  D gate_0/level
+  CLK /pll_0/clk_out1
 }
 
 # Create axis_lfsr
@@ -126,6 +122,22 @@ cell xilinx.com:ip:xbip_dsp48_macro mult_0 {
   P_WIDTH 15
 } {
   A dds_0/m_axis_data_tdata
+  B delay_0/Q
+  CARRYIN lfsr_0/m_axis_tdata
+  CLK /pll_0/clk_out1
+}
+
+# Create xbip_dsp48_macro
+cell xilinx.com:ip:xbip_dsp48_macro mult_1 {
+  INSTRUCTION1 RNDSIMPLE(A*B+CARRYIN)
+  A_WIDTH.VALUE_SRC USER
+  B_WIDTH.VALUE_SRC USER
+  OUTPUT_PROPERTIES User_Defined
+  A_WIDTH 24
+  B_WIDTH 16
+  P_WIDTH 15
+} {
+  A dds_0/m_axis_data_tdata
   B slice_3/dout
   CARRYIN lfsr_0/m_axis_tdata
   CLK /pll_0/clk_out1
@@ -135,7 +147,7 @@ cell xilinx.com:ip:xbip_dsp48_macro mult_0 {
 cell xilinx.com:ip:c_shift_ram delay_1 {
   WIDTH.VALUE_SRC USER
   WIDTH 1
-  DEPTH 15
+  DEPTH 14
 } {
   D gate_0/dout
   CLK /pll_0/clk_out1
@@ -143,9 +155,17 @@ cell xilinx.com:ip:c_shift_ram delay_1 {
 
 # Create axis_zeroer
 cell pavel-demin:user:axis_zeroer zeroer_0 {
-  AXIS_TDATA_WIDTH 32
+  AXIS_TDATA_WIDTH 16
 } {
   s_axis_tdata mult_0/P
   s_axis_tvalid delay_1/Q
+  aclk /pll_0/clk_out1
+}
+
+# Create axis_constant
+cell pavel-demin:user:axis_constant output_0 {
+  AXIS_TDATA_WIDTH 16
+} {
+  cfg_data mult_1/P
   aclk /pll_0/clk_out1
 }

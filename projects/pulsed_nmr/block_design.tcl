@@ -90,7 +90,6 @@ cell pavel-demin:user:axis_stemlab_sdr_dac dac_0 {
   dac_sel dac_sel_o
   dac_wrt dac_wrt_o
   dac_dat dac_dat_o
-  s_axis_tvalid const_0/dout
 }
 
 # CFG
@@ -151,8 +150,20 @@ module tx_0 {
   slice_1/din rst_slice_0/dout
   slice_2/din cfg_slice_1/dout
   slice_3/din cfg_slice_1/dout
-  or_0/Res concat_0/In0
-  zeroer_0/M_AXIS dac_0/S_AXIS
+  delay_1/Q concat_0/In0
+}
+
+# Create axis_combiner
+cell  xilinx.com:ip:axis_combiner comb_0 {
+  TDATA_NUM_BYTES.VALUE_SRC USER
+  TDATA_NUM_BYTES 2
+  NUM_SI 2
+} {
+  S00_AXIS tx_0/zeroer_0/M_AXIS
+  S01_AXIS tx_0/output_0/M_AXIS
+  M_AXIS dac_0/S_AXIS
+  aclk pll_0/clk_out1
+  aresetn rst_0/peripheral_aresetn
 }
 
 # STS
@@ -210,8 +221,8 @@ apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {
   Clk Auto
 } [get_bd_intf_pins rx_0/reader_0/S_AXI]
 
-set_property RANGE 64K [get_bd_addr_segs ps_0/Data/SEG_reader_0_reg0]
-set_property OFFSET 0x40010000 [get_bd_addr_segs ps_0/Data/SEG_reader_0_reg0]
+set_property RANGE 128K [get_bd_addr_segs ps_0/Data/SEG_reader_0_reg0]
+set_property OFFSET 0x40020000 [get_bd_addr_segs ps_0/Data/SEG_reader_0_reg0]
 
 # Create all required interconnections
 apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {
@@ -219,5 +230,5 @@ apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {
   Clk Auto
 } [get_bd_intf_pins tx_0/writer_0/S_AXI]
 
-set_property RANGE 8K [get_bd_addr_segs ps_0/Data/SEG_writer_0_reg0]
-set_property OFFSET 0x40002000 [get_bd_addr_segs ps_0/Data/SEG_writer_0_reg0]
+set_property RANGE 16K [get_bd_addr_segs ps_0/Data/SEG_writer_0_reg0]
+set_property OFFSET 0x40004000 [get_bd_addr_segs ps_0/Data/SEG_writer_0_reg0]

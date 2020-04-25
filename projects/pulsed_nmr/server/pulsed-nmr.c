@@ -32,8 +32,8 @@ int main(int argc, char *argv[])
 
   sts = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40000000);
   cfg = mmap(NULL, sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40001000);
-  rx_data = mmap(NULL, 16*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40010000);
-  tx_data = mmap(NULL, 2*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40002000);
+  rx_data = mmap(NULL, 32*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40020000);
+  tx_data = mmap(NULL, 4*sysconf(_SC_PAGESIZE), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0x40004000);
 
   rx_rst = ((uint8_t *)(cfg + 0));
   rx_freq = ((uint32_t *)(cfg + 4));
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
   /* set default tx phase increment */
   *tx_freq = (uint32_t)floor(19000000 / 122.88e6 * (1<<30) + 0.5);
   /* set default tx level */
-  *tx_level = 16382;
+  *tx_level = 0;
 
   if((sock_server = socket(AF_INET, SOCK_STREAM, 0)) < 0)
   {
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
               break;
             case 2:
               *rx_rate = 512;
-              bre3k;
+              break;
             case 3:
               *rx_rate = 256;
               break;
@@ -135,28 +135,28 @@ int main(int argc, char *argv[])
           /* set A width */
           *tx_rst |= 1; *tx_rst &= ~1;
 
+          *tx_data = 32766;
           *tx_data = 0;
           *tx_data = 100-2;
-          *tx_data = 50-1;
-          *tx_data = 0;
+          *tx_data = 50;
 
+          *tx_data = 32766;
           *tx_data = (uint32_t)floor(0.25 * (1<<30) + 0.5);;
           *tx_data = 150-2;
-          *tx_data = 75-1;
-          *tx_data = 0;
+          *tx_data = 75;
 
+          *tx_data = 32766;
           *tx_data = (uint32_t)floor(0.5 * (1<<30) + 0.5);;
           *tx_data = 100-2;
-          *tx_data = 50-1;
-          *tx_data = 0;
+          *tx_data = 50;
 
           break;
         case 3:
           /* fire */
           *rx_rst |= 1; *rx_rst &= ~1;
           *rx_rst &= ~2; *rx_rst |= 2;
-          /* transfer 5 * 8192 = 40960 samples */
-          for(i = 0; i < 5; ++i)
+          /* transfer 10 * 8192 = 81920 samples */
+          for(i = 0; i < 10; ++i)
           {
             while(*rx_cntr < 16384) usleep(500);
             for(j = 0; j < 8192; ++j) buffer[j] = *rx_data;
