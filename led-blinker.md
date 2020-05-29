@@ -145,7 +145,7 @@ sudo sh scripts/alpine.sh
 
 A pre-built SD card image can be downloaded from [this link]({{ site.release-image }}).
 
-To write the image to a micro SD card, copy the contents of the SD card image zip file to a micro SD card with a MBR/MSDOS partition table and a single FAT32 partition.
+To write the image to a micro SD card, copy the contents of the SD card image zip file to a micro SD card.
 
 More details about the SD card image can be found at [this link]({{ "/alpine/" | prepend: site.baseurl }}).
 
