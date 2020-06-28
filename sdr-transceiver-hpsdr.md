@@ -1,7 +1,8 @@
 ---
-layout: page
+layout: redirect
 title: SDR transceiver compatible with HPSDR
 permalink: /sdr-transceiver-hpsdr/
+redirect_to: http://pavel-demin.github.io/red-pitaya-notes/sdr-transceiver-hpsdr-122-88/
 ---
 
 Introduction

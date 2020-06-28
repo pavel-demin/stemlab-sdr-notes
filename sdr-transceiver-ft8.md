@@ -1,7 +1,8 @@
 ---
-layout: page
+layout: redirect
 title: Multiband FT8 transceiver
 permalink: /sdr-transceiver-ft8/
+redirect_to: http://pavel-demin.github.io/red-pitaya-notes/sdr-transceiver-ft8-122-88/
 ---
 
 Short description

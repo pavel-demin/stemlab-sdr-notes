@@ -1,7 +1,8 @@
 ---
-layout: page
+layout: redirect
 title: Links
 permalink: /links/
+redirect_to: http://pavel-demin.github.io/red-pitaya-notes/links/
 ---
  - [LTC2185, dual 16-bit ADC](https://www.analog.com/en/products/ltc2185.html)
 

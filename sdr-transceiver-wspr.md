@@ -1,7 +1,8 @@
 ---
-layout: page
+layout: redirect
 title: Multiband WSPR transceiver
 permalink: /sdr-transceiver-wspr/
+redirect_to: http://pavel-demin.github.io/red-pitaya-notes/sdr-transceiver-wspr-122-88/
 ---
 
 Interesting links

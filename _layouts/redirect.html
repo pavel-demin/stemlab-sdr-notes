@@ -7,12 +7,12 @@
 <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
 <meta name="description" content="{{ site.description }}">
 <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
-<link rel="canonical" href="{{ page.redirect_to | prepend: site.baseurl }}"/>
-<meta http-equiv="refresh" content="0;url={{ page.redirect_to | prepend: site.baseurl }}" />
+<link rel="canonical" href="{{ page.redirect_to }}"/>
+<meta http-equiv="refresh" content="0;url={{ page.redirect_to }}" />
 </head>
 <body>
 <h1>Redirecting...</h1>
-<a href="{{ page.redirect_to | prepend: site.baseurl }}">Click here if you are not redirected.<a>
-<script>location='{{ page.redirect_to | prepend: site.baseurl }}'</script>
+<a href="{{ page.redirect_to }}">Click here if you are not redirected.<a>
+<script>location='{{ page.redirect_to }}'</script>
 </body>
 </html>

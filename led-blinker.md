@@ -1,7 +1,8 @@
 ---
-layout: page
+layout: redirect
 title: LED blinker
 permalink: /led-blinker/
+redirect_to: http://pavel-demin.github.io/red-pitaya-notes/led-blinker/
 ---
 
 Introduction

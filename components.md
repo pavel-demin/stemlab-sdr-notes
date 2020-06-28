@@ -1,7 +1,8 @@
 ---
-layout: page
+layout: redirect
 title: List of components
 permalink: /components/
+redirect_to: http://pavel-demin.github.io/red-pitaya-notes/components/
 ---
 The following is a list of components that can be used with STEMlab SDR.
 

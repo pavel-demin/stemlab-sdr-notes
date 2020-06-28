@@ -1,7 +1,8 @@
 ---
-layout: page
+layout: redirect
 title: Development machine
 permalink: /development-machine/
+redirect_to: http://pavel-demin.github.io/red-pitaya-notes/development-machine/
 ---
 
 The following are the instructions for installing a virtual machine with [Debian](https://www.debian.org/releases/stretch) 9.12 (amd64) and [Vitis Core Development Kit](https://www.xilinx.com/products/design-tools/vitis.html) 2019.2.

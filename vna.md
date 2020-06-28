@@ -1,7 +1,8 @@
 ---
-layout: page
+layout: redirect
 title: Vector Network Analyzer
 permalink: /vna/
+redirect_to: http://pavel-demin.github.io/red-pitaya-notes/vna-122-88/
 ---
 
 Interesting links

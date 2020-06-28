@@ -1,5 +1,6 @@
 ---
-layout: default
+layout: redirect
+redirect_to: http://pavel-demin.github.io/red-pitaya-notes/
 ---
 
 1. [List of components]({{ "/components/" | prepend: site.baseurl }})

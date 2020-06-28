@@ -1,7 +1,8 @@
 ---
-layout: page
+layout: redirect
 title: Alpine with pre-built applications
 permalink: /alpine/
+redirect_to: http://pavel-demin.github.io/red-pitaya-notes/alpine/
 ---
 
 Introduction
